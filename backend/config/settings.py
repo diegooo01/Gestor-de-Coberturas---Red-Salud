@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "polizas",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "API Gestor de Coberturas",
+    "DESCRIPTION": "API para consultar pólizas de salud y registrar consumos de coberturas.",
+    "VERSION": "1.0.0",
+}

@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema, OpenApiExample
 
 from .models import Poliza, PlanCobertura, Consumo
 from .serializers import PolizaSerializer
@@ -41,6 +42,18 @@ def listar_coberturas(request, numero):
         )
     return Response(data)
 
+@extend_schema(
+    request={
+        "application/json": {
+            "type": "object",
+            "properties": {"cobertura_id": {"type": "integer"}},
+            "required": ["cobertura_id"],
+        }
+    },
+    examples=[
+        OpenApiExample("Ejemplo", value={"cobertura_id": 2}),
+    ],
+)
 @api_view(["POST"])
 def registrar_consumo(request, numero):
     #Validacion 1: La poliza debe existir
