@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Asegurado(models.Model):
     numero_documento = models.CharField(max_length=20, unique=True)
@@ -30,6 +31,14 @@ class Poliza(models.Model):
 
     def __str__(self):
         return f"{self.numero} - {self.asegurado.numero_documento}"
+
+    @property
+    def esta_vigente(self):
+        hoy = timezone.localdate()
+        return (
+                self.estado == self.Estado.ACTIVA
+                and self.fecha_inicio <= hoy <= self.fecha_fin
+        )
 
 class Cobertura(models.Model):
     nombre = models.CharField(max_length=100)
