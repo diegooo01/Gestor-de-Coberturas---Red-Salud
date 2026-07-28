@@ -1,21 +1,21 @@
 from rest_framework import serializers
 
-from .models import Poliza
+from .models import Poliza, Asegurado, Plan
 
 class AseguradoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Poliza
+        model = Asegurado
         fields = ["numero_documento", "nombres", "apellidos"]
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Poliza
+        model = Plan
         fields = ["id", "nombre", "descripcion"]
 
 class PolizaSerializer(serializers.ModelSerializer):
     asegurado = AseguradoSerializer(read_only=True)
     plan = PlanSerializer(read_only=True)
-    esta_vigente =serializers.CharField(read_only=True)
+    esta_vigente =serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Poliza
