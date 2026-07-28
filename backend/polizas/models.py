@@ -5,9 +5,15 @@ class Asegurado(models.Model):
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.nombres} - {self.apellidos} - {self.numero_documento}"
+
 class Plan(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nombre
 
 class Poliza(models.Model):
     class Estado(models.TextChoices):
@@ -22,13 +28,22 @@ class Poliza(models.Model):
     fecha_fin = models.DateField()
     estado = models.CharField(choices=Estado.choices, default=Estado.ACTIVA, max_length=20)
 
+    def __str__(self):
+        return f"{self.numero} - {self.asegurado.numero_documento}"
+
 class Cobertura(models.Model):
     nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
 
 class Consumo(models.Model):
     poliza = models.ForeignKey(Poliza, on_delete=models.CASCADE, related_name='consumo')
     cobertura = models.ForeignKey(Cobertura, on_delete=models.PROTECT, related_name='consumo')
     fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.poliza.numero} - {self.cobertura.nombre}"
 
 class PlanCobertura(models.Model):
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE, related_name='plan_cobertura')
@@ -37,3 +52,6 @@ class PlanCobertura(models.Model):
 
     class Meta:
         unique_together = ('plan', 'cobertura')
+
+    def __str__(self):
+        return f"{self.plan.nombre} - {self.cobertura.nombre} - {self.limite_usos}"
