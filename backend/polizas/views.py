@@ -40,3 +40,63 @@ def listar_coberturas(request, numero):
             }
         )
     return Response(data)
+
+@api_view(["POST"])
+def registrar_consumo(request, numero):
+    #Validacion 1: La poliza debe existir
+    try:
+        poliza = Poliza.objects.get(numero=numero)
+    except Poliza.DoesNotExist:
+        return Response(
+            {"detail": "La póliza no existe."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    #Validacion 2: La poliza tiene que estar vigente
+    if not poliza.esta_vigente:
+        return Response(
+            {"detail": "La póliza no está vigente."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    #Se debe indicar la cobertura la cual se quiere registrar el consumo
+    cobertura_id = request.data.get("cobertura_id")
+    if not cobertura_id:
+        return Response(
+            {"detail": "Debe indicar la cobertura (cobertura_id)."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    #Validacion 3: La cobertura que se elige debe pertenecer a la poliza
+    try:
+        plan_cobertura = PlanCobertura.objects.get(
+            plan=poliza.plan, cobertura_id=cobertura_id
+        )
+    except PlanCobertura.DoesNotExist:
+        return Response(
+            {"detail": "La cobertura no pertenece al plan de la póliza."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    #Validacion 4: No se debe exceder el limite de uso de la cobertura
+    consumos_realizados = Consumo.objects.filter(
+        poliza=poliza, cobertura_id=cobertura_id
+    ).count()
+    if consumos_realizados >= plan_cobertura.limite_usos:
+        return Response(
+            {"detail": "Se alcanzó el límite de usos de esta cobertura."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    #Se crea el consumo/cobertura
+    Consumo.objects.create(poliza=poliza, cobertura_id=cobertura_id)
+
+    return Response(
+        {
+            "detail": "Consumo registrado correctamente.",
+            "cobertura": plan_cobertura.cobertura.nombre,
+            "consumos_realizados": consumos_realizados + 1,
+            "saldo_disponible": plan_cobertura.limite_usos - (consumos_realizados + 1),
+        },
+        status=status.HTTP_201_CREATED,
+    )
