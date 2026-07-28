@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "polizas",
     "drf_spectacular",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -148,3 +150,7 @@ SPECTACULAR_SETTINGS = {
         }
     },
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+]
