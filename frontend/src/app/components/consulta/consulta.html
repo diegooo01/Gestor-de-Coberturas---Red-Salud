@@ -1,0 +1,17 @@
+<h2>Consultar Póliza</h2>
+
+<input [(ngModel)]="numero" placeholder="Número de póliza" />
+<button (click)="buscarPoliza()">Buscar</button>
+
+<p>{{ mensaje }}</p>
+
+@if (poliza) {
+  <div>
+    <h3>Datos de la póliza</h3>
+    <p>Número: {{ poliza.numero }}</p>
+    <p>Estado: {{ poliza.estado }}</p>
+    <p>Vigente: {{ poliza.esta_vigente }}</p>
+    <p>Asegurado: {{ poliza.asegurado.nombres }} {{ poliza.asegurado.apellidos }}</p>
+    <p>Plan: {{ poliza.plan.nombre }}</p>
+  </div>
+}
