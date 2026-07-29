@@ -18,12 +18,30 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from drf_spectacular.utils import extend_schema
+
+class TokenObtainPairDoc(TokenObtainPairView):
+    @extend_schema(
+        summary="Iniciar sesión",
+        description="Devuelve un token de acceso (access) y uno de refresco (refresh).",
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
+class TokenRefreshDoc(TokenRefreshView):
+    @extend_schema(
+        summary="Refrescar token",
+        description="Devuelve un nuevo token de acceso a partir del refresh.",
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("polizas.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/token/", TokenObtainPairDoc.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshDoc.as_view(), name="token_refresh"),
 ]

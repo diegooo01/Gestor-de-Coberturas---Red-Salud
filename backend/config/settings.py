@@ -140,6 +140,7 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API para consultar pólizas de salud y registrar consumos de coberturas.",
     "VERSION": "1.0.0",
     "SECURITY": [{"BearerAuth": []}],
+    "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENTS": {
         "securitySchemes": {
             "BearerAuth": {
