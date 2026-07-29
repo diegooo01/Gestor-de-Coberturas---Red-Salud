@@ -1,17 +1,56 @@
-<h2>Consultar Póliza</h2>
+<div class="page">
+  <nav class="navbar">
+    <span class="brand">Gestor de Coberturas</span>
+    <button class="btn-ghost" (click)="cerrarSesion()">Cerrar sesión</button>
+  </nav>
 
-<input [(ngModel)]="numero" placeholder="Número de póliza" />
-<button (click)="buscarPoliza()">Buscar</button>
+  <div class="content">
+    <div class="card">
+      <h2>Consulta de Pólizas</h2>
 
-<p>{{ mensaje }}</p>
+      <div class="search">
+        <input [(ngModel)]="numero" placeholder="Ej: POL-2025-0001" />
+        <button class="btn" (click)="buscarPoliza()">Buscar</button>
+      </div>
 
-@if (poliza) {
-  <div>
-    <h3>Datos de la póliza</h3>
-    <p>Número: {{ poliza.numero }}</p>
-    <p>Estado: {{ poliza.estado }}</p>
-    <p>Vigente: {{ poliza.esta_vigente }}</p>
-    <p>Asegurado: {{ poliza.asegurado.nombres }} {{ poliza.asegurado.apellidos }}</p>
-    <p>Plan: {{ poliza.plan.nombre }}</p>
+      @if (mensaje) {
+        <p class="alert" [class.alert-error]="esError" [class.alert-ok]="!esError">{{ mensaje }}</p>
+      }
+
+      @if (poliza) {
+        <div class="poliza-box">
+          <h3>Datos de la póliza</h3>
+          <div class="grid">
+            <span class="label">Número</span><span>{{ poliza.numero }}</span>
+            <span class="label">Estado</span>
+            <span><span class="badge" [class.badge-on]="poliza.esta_vigente" [class.badge-off]="!poliza.esta_vigente">{{ poliza.estado }}</span></span>
+            <span class="label">Vigente</span><span>{{ poliza.esta_vigente ? 'Sí' : 'No' }}</span>
+            <span class="label">Asegurado</span><span>{{ poliza.asegurado.nombres }} {{ poliza.asegurado.apellidos }}</span>
+            <span class="label">Plan</span><span>{{ poliza.plan.nombre }}</span>
+          </div>
+        </div>
+
+        <h3 class="cob-title">Coberturas</h3>
+        @if (coberturas.length > 0) {
+          <div class="cob-list">
+            @for (cobertura of coberturas; track cobertura.cobertura_id) {
+              <div class="cob-item">
+                <div class="cob-info">
+                  <strong>{{ cobertura.nombre }}</strong>
+                  <div class="cob-nums">
+                    <span>Límite: {{ cobertura.limite_usos }}</span>
+                    <span>Usados: {{ cobertura.consumos_realizados }}</span>
+                    <span class="saldo" [class.saldo-cero]="cobertura.saldo_disponible === 0">Saldo: {{ cobertura.saldo_disponible }}</span>
+                  </div>
+                </div>
+                <button class="btn" [disabled]="cobertura.saldo_disponible === 0" (click)="crearConsumo(cobertura.cobertura_id)">Consumir</button>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty">Esta póliza no tiene coberturas.</p>
+        }
+      }
+    </div>
   </div>
-}
+</div>

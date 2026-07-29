@@ -21,6 +21,6 @@ export class Polizas {
   }
 
   registrarConsumo(numero: string, coberturaId: number): Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}/polizas/${numero}/consumos/`, { coberturaId: coberturaId });
+    return this.http.post<any>(`${this.apiUrl}/polizas/${numero}/consumos/`, { cobertura_id: coberturaId });
   }
 }

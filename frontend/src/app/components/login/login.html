@@ -1,7 +1,14 @@
-<h2>Iniciar sesión</h2>
+<div class="login-page">
+  <div class="login-card">
+    <h2>Iniciar sesión</h2>
+    <p class="sub">Gestor de Coberturas</p>
 
-<input [(ngModel)]="username" placeholder="Usuario" />
-<input [(ngModel)]="password" type="password" placeholder="Contraseña" />
-<button (click)="onLogin()">Ingresar</button>
+    <input [(ngModel)]="username" placeholder="Usuario" class="field" />
+    <input [(ngModel)]="password" type="password" placeholder="Contraseña" class="field" />
+    <button (click)="onLogin()" class="btn-login">Ingresar</button>
 
-<p>{{ mensaje }}</p>
+    @if (mensaje) {
+      <p class="msg">{{ mensaje }}</p>
+    }
+  </div>
+</div>
