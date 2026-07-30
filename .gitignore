@@ -3,12 +3,15 @@ backend/venv/
 __pycache__/
 *.pyc
 db.sqlite3
-.env
 
 #Frontend
 frontend/node_modules/
 frontend/dist/
 
 .idea/
-.vscode/
 .DS_Store
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+config.bat
+node_modules
